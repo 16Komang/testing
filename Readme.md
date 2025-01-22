@@ -1,65 +1,121 @@
-Submission Management System
-This is a simple web application to manage submissions, with functionality to view, delete, and update records. It is built with PHP, MySQL, and Bootstrap. This README will guide you through setting up, running the application, and configuring the database and mailer settings.
+# Submission Management System
 
-Table of Contents
-Requirements
-Setup Instructions
-Database Setup
-Mailer Configuration
-Running the Application
-Requirements
-PHP 7.4 or higher
-MySQL or MariaDB
-Composer (for dependencies management)
-SMTP server (for email functionality)
-Setup Instructions
+This is a web application designed to manage invitations and submissions. It allows users to manage invitations, track submissions, and perform actions based on the submission status. The application is built using PHP, MySQL, and Bootstrap.
 
-1. Clone the Repository
+---
+
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [Setup Instructions](#setup-instructions)
+    - [Clone the Repository](#1-clone-the-repository)
+    - [Database Setup](#2-database-setup)
+    - [Mailer Configuration](#3-mailer-configuration)
+3. [Running the Application](#running-the-application)
+4. [Importing Data](#importing-data)
+5. [Additional Configuration](#additional-configuration)
+6. [Conclusion](#conclusion)
+
+---
+
+## Requirements
+
+To run this application, ensure your system meets the following requirements:
+
+- **PHP** 7.4 or higher
+- **MySQL** or **MariaDB**
+- **Composer** (for dependency management)
+- **SMTP server** (for email functionality, optional)
+
+---
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
 Clone this repository to your local machine or server:
 
-bash
-Salin
-Edit
+```bash
 git clone https://your-repository-url.git
 Navigate to the project directory:
-
-bash
-Salin
-Edit
 cd your-repository-directory
-
 2. Database Setup
-You need to create a MySQL database and import the schema to set up the submissions table.
-
 2.1 Create the Database
 Open your MySQL shell or use a tool like phpMyAdmin.
+
 Create a new database by running the following SQL command:
-sql
-Salin
-Edit
-CREATE DATABASE submissions_db;
-2.2 Import the Database Schema
-You will need to create the table structure. Create a SQL file (e.g., database_schema.sql) with the following content and import it into your database:
-sql
-Salin
-Edit
-CREATE TABLE submissions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    relationship VARCHAR(255) NOT NULL,
-    comments TEXT,
-    file_path VARCHAR(255) NOT NULL
-);
-Alternatively, you can run the SQL commands directly in phpMyAdmin or MySQL CLI.
+CREATE DATABASE student_reference_system4;
+-- Struktur dari tabel `invitations`
+CREATE TABLE `invitations` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `status` enum('Pending','Accepted','Expired') DEFAULT 'Pending',
+  `expires_at` timestamp NOT NULL DEFAULT (current_timestamp() + interval 7 day),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_used` tinyint(1) DEFAULT 0,
+  `used_by` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Struktur dari tabel `submissions`
+CREATE TABLE `submissions` (
+  `id` int(11) NOT NULL,
+  `invitation_id` int(11) NOT NULL,
+  `relationship` text NOT NULL,
+  `comments` text NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Struktur dari tabel `users`
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` enum('admin','student','writer') NOT NULL DEFAULT 'student'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Foreign Key and Auto Increment Settings
+ALTER TABLE `invitations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
+  ADD KEY `user_id` (`user_id`);
+
+ALTER TABLE `submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invitation_id` (`invitation_id`);
+
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+ALTER TABLE `invitations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `submissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+ALTER TABLE `invitations`
+  ADD CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `submissions`
+  ADD CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`invitation_id`) REFERENCES `invitations` (`id`) ON DELETE CASCADE;
+Alternatively, you can import this SQL dump directly into phpMyAdmin or MySQL CLI.
 
 2.3 Configure Database Connection
-In the file db_config.php, update the following database connection details:
-php
-Salin
-Edit
+Update the db_config.php file with your database credentials:
 <?php
 $host = 'localhost'; // Database host, typically 'localhost'
-$dbname = 'submissions_db'; // Database name
+$dbname = 'student_reference_system4'; // Database name
 $username = 'root'; // Your database username
 $password = ''; // Your database password
 
@@ -70,24 +126,176 @@ try {
     echo "Connection failed: " . $e->getMessage();
     exit;
 }
-?>
-
 3. Mailer Configuration
-For sending notifications or alerts, you can configure an SMTP mailer using PHP. If you want to integrate email functionality, you can use PHPMailer or any other mailer library.
+To enable email notifications, configure an SMTP mailer using PHP. This is optional but recommended.
 
 3.1 Install PHPMailer
-To install PHPMailer via Composer, run the following command:
+Install PHPMailer via Composer:
+composer require phpmailer/phpmailer
+
+Berikut adalah README.md dalam format Markdown yang mencakup semua instruksi yang telah disebutkan:
+
+markdown
+Salin
+Edit
+# Submission Management System
+
+This is a web application designed to manage invitations and submissions. It allows users to manage invitations, track submissions, and perform actions based on the submission status. The application is built using PHP, MySQL, and Bootstrap.
+
+---
+
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [Setup Instructions](#setup-instructions)
+    - [Clone the Repository](#1-clone-the-repository)
+    - [Database Setup](#2-database-setup)
+    - [Mailer Configuration](#3-mailer-configuration)
+3. [Running the Application](#running-the-application)
+4. [Importing Data](#importing-data)
+5. [Additional Configuration](#additional-configuration)
+6. [Conclusion](#conclusion)
+
+---
+
+## Requirements
+
+To run this application, ensure your system meets the following requirements:
+
+- **PHP** 7.4 or higher
+- **MySQL** or **MariaDB**
+- **Composer** (for dependency management)
+- **SMTP server** (for email functionality, optional)
+
+---
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+Clone this repository to your local machine or server:
+
+```bash
+git clone https://your-repository-url.git
+Navigate to the project directory:
+
+bash
+Salin
+Edit
+cd your-repository-directory
+2. Database Setup
+2.1 Create the Database
+Open your MySQL shell or use a tool like phpMyAdmin.
+
+Create a new database by running the following SQL command:
+
+sql
+Salin
+Edit
+CREATE DATABASE student_reference_system4;
+2.2 Import the Database Schema
+You can use the following SQL schema to create the required tables in your database:
+
+sql
+Salin
+Edit
+-- Struktur dari tabel `invitations`
+CREATE TABLE `invitations` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `status` enum('Pending','Accepted','Expired') DEFAULT 'Pending',
+  `expires_at` timestamp NOT NULL DEFAULT (current_timestamp() + interval 7 day),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_used` tinyint(1) DEFAULT 0,
+  `used_by` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Struktur dari tabel `submissions`
+CREATE TABLE `submissions` (
+  `id` int(11) NOT NULL,
+  `invitation_id` int(11) NOT NULL,
+  `relationship` text NOT NULL,
+  `comments` text NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Struktur dari tabel `users`
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` enum('admin','student','writer') NOT NULL DEFAULT 'student'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Foreign Key and Auto Increment Settings
+ALTER TABLE `invitations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
+  ADD KEY `user_id` (`user_id`);
+
+ALTER TABLE `submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invitation_id` (`invitation_id`);
+
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+ALTER TABLE `invitations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `submissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+ALTER TABLE `invitations`
+  ADD CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `submissions`
+  ADD CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`invitation_id`) REFERENCES `invitations` (`id`) ON DELETE CASCADE;
+Alternatively, you can import this SQL dump directly into phpMyAdmin or MySQL CLI.
+
+2.3 Configure Database Connection
+Update the db_config.php file with your database credentials:
+
+php
+Salin
+Edit
+<?php
+$host = 'localhost'; // Database host, typically 'localhost'
+$dbname = 'student_reference_system4'; // Database name
+$username = 'root'; // Your database username
+$password = ''; // Your database password
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+    exit;
+}
+3. Mailer Configuration
+To enable email notifications, configure an SMTP mailer using PHP. This is optional but recommended.
+
+3.1 Install PHPMailer
+Install PHPMailer via Composer:
 
 bash
 Salin
 Edit
 composer require phpmailer/phpmailer
 3.2 Configure PHPMailer
-Update the mailer configuration in the config or a specific mailer settings file (e.g., mailer_config.php):
-
-php
-Salin
-Edit
+Update the mailer configuration in the mailer_config.php file:
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -95,21 +303,21 @@ require 'vendor/autoload.php';
 
 $mail = new PHPMailer(true);
 try {
-    //Server settings
+    // Server settings
     $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host       = 'smtp.yourmailserver.com';                // Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                     // Enable SMTP authentication
-    $mail->Username   = 'your_email@example.com';                // SMTP username
-    $mail->Password   = 'your_password';                          // SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;           // Enable TLS encryption
-    $mail->Port       = 587;                                      // TCP port to connect to
+    $mail->Host       = 'smtp.yourmailserver.com';              // Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'your_email@example.com';               // SMTP username
+    $mail->Password   = 'your_password';                       // SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption
+    $mail->Port       = 587;                                   // TCP port to connect to
 
-    //Recipients
+    // Recipients
     $mail->setFrom('your_email@example.com', 'Mailer');
-    $mail->addAddress('recipient@example.com');                   // Add a recipient
+    $mail->addAddress('recipient@example.com');                // Add a recipient
 
     // Content
-    $mail->isHTML(true);                                          // Set email format to HTML
+    $mail->isHTML(true);                                       // Set email format to HTML
     $mail->Subject = 'Submission Notification';
     $mail->Body    = 'Your submission has been successfully processed.';
 
@@ -118,35 +326,29 @@ try {
 } catch (Exception $e) {
     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }
-Make sure to replace yourmailserver.com, your_email@example.com, and your_password with your actual mail server information.
+Replace yourmailserver.com, your_email@example.com, and your_password with your actual SMTP server information.
 
 Running the Application
-1. Start Your Web Server
-You can use XAMPP, WAMP, or any other LAMP stack to run PHP applications.
-Make sure your server is running, and the Document Root is set to the directory where your application resides.
-If you're using XAMPP:
+Start your web server:
 
-Start Apache and MySQL from the XAMPP Control Panel.
-If you're using PHP's built-in server:
+XAMPP/WAMP: Start Apache and MySQL from the control panel.
 
-From your project directory, run:
+PHP built-in server: Run the following command in the project directory:
+
 bash
 Salin
 Edit
 php -S localhost:8080
-Visit http://localhost:8080 in your browser to view the app.
-
+http://localhost:8080
 Importing Data
-To import submissions data into the application:
+To import data into the application:
 
-Insert records manually through your app's front-end.
-Alternatively, you can import a .csv or .sql file using phpMyAdmin or MySQL CLI.
+You can insert records manually through the front end.
+Or, import a .csv or .sql file using phpMyAdmin or MySQL CLI.
 Additional Configuration
-Session Configuration: If you're using sessions for login and roles, ensure your server has session support enabled (session_start() should be called in each PHP file that requires it).
-
-Error Handling: Add proper error handling in your db_config.php and other files to catch database connection issues or invalid queries.
-
+Session Configuration: Ensure session support is enabled (call session_start() in PHP files requiring sessions).
+Error Handling: Add proper error handling for database connections and queries.
 Conclusion
-This application is designed to manage submission records with CRUD operations, and it also includes features for deletion and email notifications. By following the steps in this README, you should be able to set up the database, configure email notifications, and run the app locally or on a server.
+This application provides functionality for managing submissions, invitations, and user records. By following this guide, you should be able to set up, configure, and run the app locally or on a server.
 
-Let me know if you need further assistance!
+Feel free to customize the project as needed, and don't hesitate to reach out for further assistance!
