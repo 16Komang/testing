@@ -119,7 +119,7 @@ This table tracks submissions made through invitations.
 
 Alternatively, you can run the SQL commands directly in phpMyAdmin or MySQL CLI.
 
-#### 2.3 Configure Database Connection
+#### Configure Database Connection
 
 Update the `db_config.php` file with your database credentials:
 
