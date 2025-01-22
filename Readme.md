@@ -119,6 +119,18 @@ This table tracks submissions made through invitations.
 
 Alternatively, you can run the SQL commands directly in phpMyAdmin or MySQL CLI.
 
+---
+
+## Importing Data
+
+To import submissions data:
+
+- Insert records manually through the app's front end.
+- Import a `.csv` or `.sql` file using phpMyAdmin or MySQL CLI.
+
+---
+
+
 #### Configure Database Connection
 
 Update the `db_config.php` file with your database credentials:
@@ -126,7 +138,7 @@ Update the `db_config.php` file with your database credentials:
 ```php
 <?php
 $host = 'localhost'; // Database host, typically 'localhost'
-$dbname = 'submissions_db'; // Database name
+$dbname = 'student_reference_system'; // Database name
 $username = 'root'; // Your database username
 $password = ''; // Your database password
 
@@ -207,20 +219,8 @@ Replace `yourmailserver.com`, `your_email@example.com`, and `your_password` with
 2. Open your browser and navigate to:
 
    ```
-   http://localhost:8080
+   localhost/cust022-SIM_send_email/login.php
    ```
-
----
-
-## Importing Data
-
-To import submissions data:
-
-- Insert records manually through the app's front end.
-- Import a `.csv` or `.sql` file using phpMyAdmin or MySQL CLI.
-
----
-
 ## Additional Configuration
 
 - **Session Configuration**: Ensure session support is enabled (call `session_start()` in PHP files requiring sessions).
@@ -231,5 +231,3 @@ To import submissions data:
 ## Conclusion
 
 This application provides basic CRUD functionality for managing submission records, with optional email notifications. By following this guide, you should be able to set up, configure, and run the app locally or on a server.
-
-Feel free to customize the project as needed, and don't hesitate to reach out for further assistance!
