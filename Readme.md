@@ -35,7 +35,7 @@ To run this application, ensure your system meets the following requirements:
 
 Clone this repository to your local machine or server:
 
-```bash
+bash
 git clone https://your-repository-url.git
 Navigate to the project directory:
 cd your-repository-directory
@@ -177,28 +177,19 @@ Clone this repository to your local machine or server:
 
 ```bash
 git clone https://your-repository-url.git
-Navigate to the project directory:
-
-bash
-Salin
-Edit
 cd your-repository-directory
-2. Database Setup
-2.1 Create the Database
-Open your MySQL shell or use a tool like phpMyAdmin.
 
-Create a new database by running the following SQL command:
+### 2. Database Setup
+#### 2.1 Create the Database
+    Open your MySQL shell or use a tool like phpMyAdmin.
 
-sql
-Salin
-Edit
-CREATE DATABASE student_reference_system4;
-2.2 Import the Database Schema
+    Create a new database by running the following SQL command:
+
+    CREATE DATABASE student_reference_system4;
+    
+#### 2.2 Import the Database Schema
 You can use the following SQL schema to create the required tables in your database:
 
-sql
-Salin
-Edit
 -- Struktur dari tabel `invitations`
 CREATE TABLE `invitations` (
   `id` int(11) NOT NULL,
@@ -284,17 +275,16 @@ try {
     echo "Connection failed: " . $e->getMessage();
     exit;
 }
-3. Mailer Configuration
-To enable email notifications, configure an SMTP mailer using PHP. This is optional but recommended.
 
-3.1 Install PHPMailer
-Install PHPMailer via Composer:
+### 3. Mailer Configuration
+    To enable email notifications, configure an SMTP mailer using PHP. This is optional but recommended.
 
-bash
-Salin
-Edit
-composer require phpmailer/phpmailer
-3.2 Configure PHPMailer
+#### 3.1 Install PHPMailer
+    Install PHPMailer via Composer:
+
+    composer require phpmailer/phpmailer
+    
+#### 3.2 Configure PHPMailer
 Update the mailer configuration in the mailer_config.php file:
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -335,20 +325,18 @@ XAMPP/WAMP: Start Apache and MySQL from the control panel.
 
 PHP built-in server: Run the following command in the project directory:
 
-bash
-Salin
-Edit
-php -S localhost:8080
-http://localhost:8080
-Importing Data
-To import data into the application:
+    php -S localhost:8080
+    http://localhost:8080
+    Importing Data
+    To import data into the application:
 
-You can insert records manually through the front end.
-Or, import a .csv or .sql file using phpMyAdmin or MySQL CLI.
-Additional Configuration
-Session Configuration: Ensure session support is enabled (call session_start() in PHP files requiring sessions).
-Error Handling: Add proper error handling for database connections and queries.
-Conclusion
+    You can insert records manually through the front end.
+    Or, import a .csv or .sql file using phpMyAdmin or MySQL CLI.
+    
+#Additional Configuration
+    Session Configuration: Ensure session support is enabled (call session_start() in PHP files requiring sessions).
+    Error Handling: Add proper error handling for database connections and queries.
+    
+#Conclusion
 This application provides functionality for managing submissions, invitations, and user records. By following this guide, you should be able to set up, configure, and run the app locally or on a server.
-
 Feel free to customize the project as needed, and don't hesitate to reach out for further assistance!
