@@ -31,7 +31,7 @@ To run this application, ensure your system meets the following requirements:
 
 ## Setup Instructions
 
-### 1. Clone the Repository
+### Clone the Repository
 
 Clone this repository to your local machine or server:
 
@@ -47,9 +47,9 @@ cd your-repository-directory
 
 ---
 
-### 2. Database Setup
+### Database Setup
 
-#### 2.1 Create the Database
+#### Create the Database
 
 1. Open your MySQL shell or use a tool like phpMyAdmin.
 2. Create a new database by running the following SQL command:
@@ -141,11 +141,11 @@ try {
 
 ---
 
-### 3. Mailer Configuration
+### Mailer Configuration
 
 To enable email notifications, configure an SMTP mailer using PHP. This is optional but recommended.
 
-#### 3.1 Install PHPMailer
+#### Install PHPMailer
 
 Install PHPMailer via Composer:
 
@@ -153,7 +153,7 @@ Install PHPMailer via Composer:
 composer require phpmailer/phpmailer
 ```
 
-#### 3.2 Configure PHPMailer
+#### Configure PHPMailer
 
 Update the mailer configuration in the `mailer_config.php` file:
 
